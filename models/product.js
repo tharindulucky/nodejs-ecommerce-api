@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     Product.hasMany(models.Image, {foreignKey: 'productId', onDelete: 'CASCADE', hooks:true});
     Product.belongsTo(models.Category, {as: 'parentCategory', foreignKey: 'parent_category' });
     Product.belongsTo(models.Category, {as: 'subCategory', foreignKey: 'sub_category' });
-    Product.belongsTo(models.User);
+    Product.belongsTo(models.User, { targetKey: "id", foreignKey: "userId" });
   };
   return Product;
 };
