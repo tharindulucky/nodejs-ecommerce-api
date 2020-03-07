@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {});
   Image.associate = function(models) {
-    // associations can be defined here
+    Image.belongsTo(models.Product, { targetKey: "id", foreignKey: "productId" });
   };
   return Image;
 };
