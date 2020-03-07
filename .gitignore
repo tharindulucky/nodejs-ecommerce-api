@@ -1,0 +1,5 @@
+uploads/
+.idea/
+node_modules/
+config/
+.env

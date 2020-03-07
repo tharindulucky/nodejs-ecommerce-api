@@ -1,0 +1,6 @@
+{
+  "env": {
+    "APP_URL": "http://localhost:3000",
+    "JWT_KEY": "zimba"
+  }
+}
