@@ -152,7 +152,7 @@ function update(req, res, next){
     //Removes empty keys
     Object.keys(productUpdateObj).forEach(key => productUpdateObj[key] === undefined ? delete productUpdateObj[key] : '');
 
-    models.Product.update(productUpdateObj, {where:{id:id}}).then(result => {
+    models.Product.update(productUpdateObj, {where:{id:id, userId: req.userData.userId}}).then(result => {
         console.log(result);
         if(result == 0){
             res.status(404).json({
@@ -191,7 +191,7 @@ function update(req, res, next){
 function destroy(req, res, next) {
     const id = req.params.id;
     const product = models.Product.findByPk(id).then(product => {
-        if (product) {
+        if (product && (req.userData.userId == product.userId)) {
             product.destroy().then(result => {
                 const response = {
                     message: "Product deleted successfully"

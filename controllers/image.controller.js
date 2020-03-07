@@ -63,8 +63,9 @@ function getImage(req, res, next) {
 
 function destroy(req, res, next) {
     const id = req.params.id;
-    models.Image.findByPk(id).then(image => {
-        if (image) {
+    models.Image.findByPk(id, {include: [models.Product]}).then(image => {
+        if (image && (image.Product.userId == req.userData.userId)) {
+
             image.destroy().then(result => {
                 const response = {
                     message: "Image deleted successfully"
@@ -79,7 +80,7 @@ function destroy(req, res, next) {
             });
         } else {
             res.status(404).json({
-                message: 'Product not found!',
+                message: 'Object not found!',
             });
         }
     });
