@@ -3,11 +3,12 @@ const models = require('../models');
 function index(req, res, next){
 
     const page = parseInt(req.query.page) || 0;
+    const limit = 10
 
     models.Product.findAll({
         include: [models.Image, models.User, {model: models.Category, as: 'parentCategory'}, {model: models.Category, as: 'subCategory'}],
-        limit:10,
-        offset: page,
+        offset: page * limit,
+        limit: limit,
     }).then(result => {
 
         const response = {
