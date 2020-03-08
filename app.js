@@ -1,5 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const fs = require('fs');
+const rfs = require('rotating-file-stream');
+const path = require('path');
 const models = require('./models');
 
 const productRoutes = require('./routes/products');
@@ -9,18 +13,6 @@ const orderRoutes = require('./routes/orders');
 const cartRoutes = require('./routes/carts');
 
 const app = express();
-
-//DB Connection Sync
-// models.sequelize.sync().then(() => {
-//     console.log("DB Synced");
-// }).catch((error) => {
-//     console.log(error);
-// });
-
-//middleware
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
-app.use('/uploads', express.static('uploads'));
 
 //Setting Headers for CORS
 app.use((req, res, next) => {
@@ -32,6 +24,26 @@ app.use((req, res, next) => {
     }
     next();
 });
+
+
+//Loggin module starts
+const logDirectory = path.join(__dirname, 'logs');
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory); // ensure log directory exists
+const accessLogStream = rfs.createStream('access.log', { // create a rotating write stream
+    interval: '1d', // rotate daily
+    path: logDirectory
+});
+//Logging module ends
+
+
+
+//middleware
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.use('/uploads', express.static('uploads'));
+app.use(morgan('combined', { stream: accessLogStream }));
+
+
 
 //routes
 app.use('/products', productRoutes);
