@@ -1,0 +1,2 @@
+::1 - - [08/Mar/2020:07:04:16 +0000] "GET /products/search?search_query=Nokia&page=0 HTTP/1.1" 200 25 "-" "insomnia/7.1.1"
+::1 - - [08/Mar/2020:07:04:22 +0000] "GET /products/search?search_query=Nokia&page=0 HTTP/1.1" 200 25 "-" "insomnia/7.1.1"
