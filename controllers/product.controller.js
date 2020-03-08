@@ -1,4 +1,5 @@
 const models = require('../models');
+const Sequelize = require('sequelize');
 
 function index(req, res, next){
 
@@ -26,7 +27,7 @@ function index(req, res, next){
 
                 return {
                     id: product.id,
-                    name: product.name,
+                    title: product.title,
                     description: product.description,
                     price: product.price,
                     images: product.Images,
@@ -213,10 +214,60 @@ function destroy(req, res, next) {
 }
 
 
+function searchProducts(req, res, next){
+    const page = parseInt(req.query.page) || 0;
+    const search_query = req.query.search_query || '';
+    const limit = 10
+
+    models.Product.findAll({
+        where: {title:{[Sequelize.Op.like]: '%'+ search_query +'%'}},
+        include: [models.Image, models.User, {model: models.Category, as: 'parentCategory'}, {model: models.Category, as: 'subCategory'}],
+        offset: page * limit,
+        limit: limit,
+    }).then(result => {
+
+        const response = {
+            count: result.length,
+            products: result.map(product => {
+
+                //User relation. Make it seperate 'cause u don't wanna include fields like password.
+                const userRel = {};
+                if(product.User != null){
+                    userRel.name = product.User.name;
+                    userRel.email = product.User.email;
+                    userRel.phone = product.User.phone;
+                    userRel.avatar = product.User.avatar;
+                }
+
+                return {
+                    id: product.id,
+                    title: product.title,
+                    description: product.description,
+                    price: product.price,
+                    images: product.Images,
+                    category: product.parentCategory,
+                    sub_category: product.subCategory,
+                    user:userRel,
+                    url: process.env.APP_URL+'/products/'+product.id
+                }
+            })
+        };
+        res.status(200).json(response);
+    }).catch(error => {
+        console.log(error);
+        res.status(500).json({
+            message: 'Something went wrong!',
+            error: error
+        });
+    });
+}
+
+
 module.exports = {
     save: save,
     index: index,
     show: show,
     update: update,
-    destroy: destroy
+    destroy: destroy,
+    searchProducts: searchProducts
 };
