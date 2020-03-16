@@ -11,6 +11,7 @@ const userRoutes = require('./routes/users');
 const imageRoutes = require('./routes/images');
 const orderRoutes = require('./routes/orders');
 const cartRoutes = require('./routes/carts');
+const categoryRoutes = require('./routes/categories');
 
 const app = express();
 
@@ -51,6 +52,7 @@ app.use('/users', userRoutes);
 app.use('/images', imageRoutes);
 app.use('/orders', orderRoutes);
 app.use('/cart', cartRoutes);
+app.use('/categories', categoryRoutes);
 
 /*
 Error Handling

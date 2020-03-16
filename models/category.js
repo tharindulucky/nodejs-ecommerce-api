@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Category.associate = function(models) {
     // associations can be defined here
+    Category.hasMany(models.Category, {foreignKey: 'parentId'});
   };
   return Category;
 };
