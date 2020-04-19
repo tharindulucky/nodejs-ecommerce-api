@@ -31,7 +31,7 @@ function index(req, res, next){
                     description: product.description,
                     price: product.price,
                     images: product.Images,
-                    category: product.parentCategory,
+                    parent_category: product.parentCategory,
                     sub_category: product.subCategory,
                     user:userRel,
                     url: process.env.APP_URL+'/products/'+product.id
@@ -116,7 +116,7 @@ function show(req, res, next) {
                 description: result.description,
                 price: result.price,
                 images: result.Images,
-                category: result.parentCategory,
+                parent_category: result.parentCategory,
                 sub_category: result.subCategory,
                 keywords:result.keywords,
                 user:userRel
@@ -245,7 +245,7 @@ function searchProducts(req, res, next){
                     description: product.description,
                     price: product.price,
                     images: product.Images,
-                    category: product.parentCategory,
+                    parent_category: product.parentCategory,
                     sub_category: product.subCategory,
                     user:userRel,
                     url: process.env.APP_URL+'/products/'+product.id
@@ -294,7 +294,7 @@ function getProductsBySeller(req, res, next){
                     description: product.description,
                     price: product.price,
                     images: product.Images,
-                    category: product.parentCategory,
+                    parent_category: product.parentCategory,
                     sub_category: product.subCategory,
                     user:userRel,
                     url: process.env.APP_URL+'/products/'+product.id
