@@ -113,6 +113,7 @@ function show(req, res, next) {
             }
 
             const response = {
+                id: result.id,
                 title: result.title,
                 description: result.description,
                 price: result.price,
@@ -196,6 +197,7 @@ function update(req, res, next){
                     }
 
                     const updatedProductObj = {
+                        id: updatedProductRes.id,
                         title: updatedProductRes.title,
                         description: updatedProductRes.description,
                         price: updatedProductRes.price,
