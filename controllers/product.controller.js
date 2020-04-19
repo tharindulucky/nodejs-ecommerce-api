@@ -8,6 +8,7 @@ function index(req, res, next){
 
     models.Product.findAll({
         include: [models.Image, models.User, {model: models.Category, as: 'parentCategory'}, {model: models.Category, as: 'subCategory'}],
+        order: [['id', 'DESC']],
         offset: page * limit,
         limit: limit,
     }).then(result => {
@@ -270,6 +271,7 @@ function getProductsBySeller(req, res, next){
 
     models.Product.findAll({
         where:{userId: req.userData.userId},
+        order: [['id', 'DESC']],
         include: [models.Image, models.User, {model: models.Category, as: 'parentCategory'}, {model: models.Category, as: 'subCategory'}],
         offset: page * limit,
         limit: limit,
