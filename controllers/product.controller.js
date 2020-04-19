@@ -163,21 +163,55 @@ function update(req, res, next){
         }else {
 
             //Save data to ProductsImage table
-            req.body.images.map(url => {
-                const product_image = {
-                    url: url,
-                    productId: id,
-                    sellerId: req.userData.userId,
-                    status: 'published'
-                }
-                models.Image.create(product_image).then(result => {
-                    console.log(result);
-                });
-            });
+            const newImages = [];
 
-            res.status(200).json({
-                message: 'Product Updated Successfully',
-                product: productUpdateObj
+            if(req.body.images !== undefined ){
+                req.body.images.map(url => {
+                    const product_image = {
+                        url: url,
+                        productId: id,
+                        sellerId: req.userData.userId,
+                        status: 'published'
+                    }
+                    newImages.push(product_image);
+                });
+            }
+
+
+            models.Image.bulkCreate(newImages).then(result => {
+
+                //Update method does not return the updated record. So, have to do a separate find. //These are promise based functions. So, have to do inside 'then'.
+                return models.Product.findByPk(id, {
+                    include: [models.Image, models.User, {model: models.Category, as: 'parentCategory'}, {model: models.Category, as: 'subCategory'}]
+                }).then((updatedProductRes) => {
+
+                    console.log(updatedProductRes);
+
+                    const userRel = {};
+                    if(updatedProductRes.User !== null){
+                        userRel.name = updatedProductRes.User.name;
+                        userRel.email = updatedProductRes.User.email;
+                        userRel.phone = updatedProductRes.User.phone;
+                        userRel.avatar = updatedProductRes.User.avatar;
+                    }
+
+                    const updatedProductObj = {
+                        title: updatedProductRes.title,
+                        description: updatedProductRes.description,
+                        price: updatedProductRes.price,
+                        images: updatedProductRes.Images,
+                        parent_category: updatedProductRes.parentCategory,
+                        sub_category: updatedProductRes.subCategory,
+                        keywords:updatedProductRes.keywords,
+                        user:userRel
+                    }
+
+                    res.status(200).json({
+                        message: 'Product Updated Successfully',
+                        product: updatedProductObj
+                    });
+                });
+
             });
         }
     }).catch(error => {
