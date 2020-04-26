@@ -35,7 +35,9 @@ function index(req, res, next){
                     parent_category: product.parentCategory,
                     sub_category: product.subCategory,
                     user:userRel,
-                    url: process.env.APP_URL+'/products/'+product.id
+                    url: process.env.APP_URL+'/products/'+product.id,
+                    createdAt: product.createdAt,
+                    updatedAt: product.updatedAt
                 }
             })
         };
@@ -121,7 +123,9 @@ function show(req, res, next) {
                 parent_category: result.parentCategory,
                 sub_category: result.subCategory,
                 keywords:result.keywords,
-                user:userRel
+                user:userRel,
+                createdAt: result.createdAt,
+                updatedAt: result.updatedAt
             }
             res.status(200).json(response);
         }else{
